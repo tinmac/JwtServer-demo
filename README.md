@@ -4,7 +4,7 @@ We want our *Jwt.Blazor* server app get a token from our *Jwt.Server* app & use 
 - Jwt.Client_Api
 <br/><br/>
 
-Using a pre fetched token we can successfully connect to bot clients.
+Using a pre fetched token we can successfully connect to both clients.
 
 At present we cannot figure out how to use the token in the *Jwt.Blazor* apps auth flow, eg using the Authorize atribute.  
 
