@@ -1,0 +1,34 @@
+@using Jwt.Blazor.Auth
+@using Jwt.Blazor.Helpers
+@using System.Diagnostics
+@inject TokenProvider TokenProvider
+
+
+<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+
+@code {
+
+    [Parameter]
+    public InitialApplicationState InitialState { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        TokenProvider.AccessToken = InitialState.AccessToken;
+        TokenProvider.RefreshToken = InitialState.RefreshToken;
+     
+        Debug.WriteLine($"App:  ==>  OnInitializedAsync  ==> InitialState.AccessToken: {Utils.ShortenJWT(InitialState.AccessToken)}");
+
+        return base.OnInitializedAsync();
+    }
+
+}

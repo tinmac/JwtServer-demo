@@ -1,0 +1,17 @@
+﻿@page "/booker"
+
+@using Jwt.Blazor.Policies
+
+@attribute [Authorize]  
+
+
+@* We really need to do this *@
+@*@attribute [Authorize(Policy = MyPolicies.IsBooker)]*@  
+
+
+<h3>Booker</h3>
+
+
+@code {
+
+}

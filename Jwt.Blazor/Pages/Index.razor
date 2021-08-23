@@ -1,0 +1,60 @@
+﻿@page "/"
+
+@using System.Diagnostics
+
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthProvider
+
+
+
+<h3>Home</h3>
+<p>@Msg</p>
+
+
+@code {
+    public string Msg { get; set; }
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+        //var user = (await AuthStat).User;
+
+        //if (user.Identity.IsAuthenticated)
+        //{
+        //    var ctx = await AuthProvider.GetAuthenticationStateAsync();
+        //    var claims = ctx?.User?.Claims;
+
+        //    Msg = claims?.FirstOrDefault(o => o.Type.ToLower() == "name")?.Value;
+
+        //    var WorkerClaim = claims?.FirstOrDefault(o => o.Type.ToLower() == "worker");
+        //    var BookerClaim = claims?.FirstOrDefault(o => o.Type.ToLower() == "booker");
+
+        //    string UserType = string.Empty;
+        //    if (WorkerClaim != null && WorkerClaim.Value == "true")
+        //    {
+        //        UserType = "Worker";
+        //        Debug.WriteLine($"Index:  -->  OnInitializedAsync()  -->  UserType: {UserType}");
+        //        NavManager.NavigateTo("/worker");
+        //    }
+        //    if (BookerClaim != null && BookerClaim.Value == "true")
+        //    {
+        //        UserType = "Booker";
+        //        Debug.WriteLine($"Index:  -->  OnInitializedAsync()  -->  UserType: {UserType}");
+        //        NavManager.NavigateTo("/booker");
+        //    }
+
+            
+        //    // no one we know, nav to an error page & LOG IT - probably an attack!
+        //    NavManager.NavigateTo("/somethingwentwrong");
+        //}
+        //else
+        //{
+        //    Msg = "You are not Authenticated";
+        //}
+
+    }
+
+
+}
+
