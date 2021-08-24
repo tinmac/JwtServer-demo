@@ -11,7 +11,7 @@
 
 @{
     Layout = null;
-    
+
     // AccessToken solution From : https://docs.microsoft.com/en-us/aspnet/core/blazor/security/server/additional-scenarios?view=aspnetcore-5.0
     var tokens = new InitialApplicationState
     {
@@ -20,6 +20,7 @@
     };
 
     Debug.WriteLine($"_Host  -->  InitialApplicationState  -->  AccessToken: {Utils.ShortenJWT(tokens.AccessToken)} ");
+    Debug.WriteLine($"    tokens.AccessToken: {Utils.ShortenJWT(tokens.AccessToken)}");
 
 }
 

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +51,7 @@ namespace Jwt.Blazor
             })
             .AddJwtBearer(options =>
             {
+                options.SaveToken = true;// Q. Does this save a cookie? - No it stores the token in 'AuthenticationProperties'
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -61,7 +63,6 @@ namespace Jwt.Blazor
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key), 
                 };
-
 
                 options.Events = new JwtBearerEvents
                 {
@@ -83,11 +84,45 @@ namespace Jwt.Blazor
 
                         context.Token = accessToken;
 
+                        Debug.WriteLine($"    manually setting context.Token: {ShorterJWT(accessToken)}");
+
+                        return Task.CompletedTask;
+                    }, 
+                    
+                    OnTokenValidated = context => 
+                    {
+                        Debug.WriteLine($"JwtBearer - OnTokenValidated ");
+
+                        ClaimsPrincipal userPrincipal = context.Principal;
+                        foreach(var clm in userPrincipal.Claims)
+                        {
+                            Debug.WriteLine($"    '{clm.Type}':'{clm.Value}'");
+                        }
+                        return Task.CompletedTask;
+                    }, 
+
+                    OnAuthenticationFailed = context =>
+                    {
+                        Debug.WriteLine($"JwtBearer - OnAuthenticationFailed ");
+                        return Task.CompletedTask;
+                    }, 
+                    
+                    OnChallenge = context =>
+                    {
+                        Debug.WriteLine($"JwtBearer - OnChallenge ");
+                        return Task.CompletedTask;
+                    },
+
+                    OnForbidden = context =>
+                    {
+                        Debug.WriteLine($"JwtBearer - OnForbidden ");
                         return Task.CompletedTask;
                     }
+
+
+
                 };
             });
-
 
 
             // Authorization (what are you allowed to do)
@@ -122,8 +157,8 @@ namespace Jwt.Blazor
 
             // Auth
             app.UseAuthentication();
-            app.UseAuthorization();
-            //app.UseMiddleware<JwtAuthorizationMiddleware>();
+            //app.UseAuthorization();
+            app.UseMiddleware<JwtAuthorizationMiddleware>();
 
 
             app.UseEndpoints(endpoints =>

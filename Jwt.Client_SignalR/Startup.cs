@@ -48,7 +48,6 @@ namespace Jwt.Client_SignalR
             })
             .AddJwtBearer(options =>
             {
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -61,40 +60,40 @@ namespace Jwt.Client_SignalR
                 };
 
 
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        // Is token in Querystring?
-                        var accessToken = context.Request.Query["access_token"];
+                //options.Events = new JwtBearerEvents
+                //{
+                //    OnMessageReceived = context =>
+                //    {
+                //        // Is token in Querystring?
+                //        var accessToken = context.Request.Query["access_token"];
 
-                        Debug.WriteLine($"JwtBearer - OnMessageReceived: {ShorterJWT(accessToken)}");
+                //        Debug.WriteLine($"JwtBearer - OnMessageReceived: {ShorterJWT(accessToken)}");
 
-                        if (!string.IsNullOrWhiteSpace(accessToken))
-                        {
-                            var path = context.HttpContext.Request.Path;
-                            if (path.StartsWithSegments("/chatHub"))
-                            {
-                                // The token is meant for chatHub (not some other endpoint)  
-                                context.Token = accessToken; // add the token to the context, the Auth middleware will then have something to validate when the user accesse's an endpoint like SignalR (in this case) or for eg Api address in another case.
+                //        if (!string.IsNullOrWhiteSpace(accessToken))
+                //        {
+                //            var path = context.HttpContext.Request.Path;
+                //            if (path.StartsWithSegments("/chatHub"))
+                //            {
+                //                // The token is meant for chatHub (not some other endpoint)  
+                //                context.Token = accessToken; // add the token to the context, the Auth middleware will then have something to validate when the user accesse's an endpoint like SignalR (in this case) or for eg Api address in another case.
 
-                                Debug.WriteLine($"Path: {path} - Token: {ShorterJWT(accessToken)}");
+                //                Debug.WriteLine($"Path: {path} - Token: {ShorterJWT(accessToken)}");
 
-                                // This manual 'ValidateJwt' is adding overhead & isnt needed (only to see the result), the middleware does the same validaiton too.
-                                if (ValidateJwt(accessToken) == true)
-                                {
-                                    Debug.WriteLine("Token  VALIDATED");
-                                }
-                                else
-                                {
-                                    Debug.WriteLine("Token  NOT  VALID");
-                                }
-                            }
-                        }
+                //                // This manual 'ValidateJwt' is adding overhead & isnt needed (only to see the result), the middleware does the same validaiton too.
+                //                if (ValidateJwt(accessToken) == true)
+                //                {
+                //                    Debug.WriteLine("Token  VALIDATED");
+                //                }
+                //                else
+                //                {
+                //                    Debug.WriteLine("Token  NOT  VALID");
+                //                }
+                //            }
+                //        }
 
-                        return Task.CompletedTask;
-                    }
-                };
+                //        return Task.CompletedTask;
+                //    }
+                //};
             });
             #endregion
 
@@ -125,6 +124,7 @@ namespace Jwt.Client_SignalR
                 .AllowAnyHeader());
 
             app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -25,8 +25,9 @@
     {
         TokenProvider.AccessToken = InitialState.AccessToken;
         TokenProvider.RefreshToken = InitialState.RefreshToken;
-     
+
         Debug.WriteLine($"App:  ==>  OnInitializedAsync  ==> InitialState.AccessToken: {Utils.ShortenJWT(InitialState.AccessToken)}");
+        Debug.WriteLine($"    TokenProvider.AccessToken: {Utils.ShortenJWT(TokenProvider.AccessToken)}");
 
         return base.OnInitializedAsync();
     }

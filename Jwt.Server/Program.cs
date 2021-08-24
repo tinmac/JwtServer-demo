@@ -43,8 +43,6 @@ namespace Jwt.Server
             {
                 var SeedAspUserDB = args.Contains("/seed");
                 SeedAspUserDB = true; // uncomment to seed manually
-                // If you are recreating Duende DB then just delte it, in Startup there is 'InitDuendoDB()' which populates if empty.
-                // NOTE: If you are adding claims to Duende (eg paid_up), then you need to add them to AspNetUsers too (by deleteing the AspNetUser DB & recreating it - to recreate uncomment seed)
                 if (SeedAspUserDB)
                 {
                     args = args.Except(new[] { "/seed" }).ToArray();
