@@ -49,6 +49,7 @@ namespace Jwt.Blazor
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
             })
+            //.AddCookie(options  => options.SlidingExpiration = true)
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;// Q. Does this save a cookie? - No it stores the token in 'AuthenticationProperties'
