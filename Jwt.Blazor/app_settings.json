@@ -1,0 +1,58 @@
+{
+  // Note: The 'WindowsServers'  IPs MUST match each Projects launchSettings.json - eg SyncHub ApplicationUrl should match the LocalServers:SyncHub_IP
+
+  // Consider making these one section 'Settings' and then prepend Win or Ubu, eg "Win_Jwt_IP": "http://localhost:6000" and "Ubu_Jwt_IP": "http://localhost:6000". Then when you detect OS use the Win or Ubu one.
+  //    Means you can have 'one' settings sobject & not have to repeat settings (like secret is, & there will be more as you move forward wiht the app)
+  "AppSettings": {
+
+    // Windows paths
+    "Win_Jwt_AspUsers_DB": "Data Source=Agy_Jwt_AspUsers.db;",
+    "Win_SyncHub_DB": "Data Source=Agy_SyncHub.db",
+
+    // Ubuntu paths
+    "Ubu_Jwt_AspUsers_DB": "Data Source=/var/www/jwt/Agy_Jwt_AspUsers.db;",
+    "Ubu_SyncHub_DB": "Data Source=/var/www/synchub/Agy_SyncHub.db",
+
+    // Local & Live IP's
+    "Localhost_Jwt_IP": "http://localhost:6000",
+    "Localhost_SyncHub_IP": "http://localhost:8000/sighub",
+    "Live_Jwt_IP": "https://jwt.visygig.com",
+    "Live_SyncHub_IP": "https://synchub.visygig.com/sighub",
+
+    "Secret": "supercalifragilisticexpialidocious",
+
+
+
+    // Agy.Blazor desktop client Specific
+    "Agy_BlazorClient_DB": "Data Source=Agy_BlazorClient.db",
+
+    // Do you want Agy.Blazor to Sync to a locally running proxy_SyncHub project server OR the Live SyncHub server on Digital Ocean droplet?
+    // This setting is used in Agy.Blazor --> MainVm --> Init
+    // Needs to be true when you go live
+    "Agy_BlazorClient_Use_Live_SyncHub": "true", // Only Agy.Blazor reads this setting not Agy.SyncHub Server - as it will be live IP's on Ubu or local IP's on Live (Mpc/Mlap).
+
+
+    // Needs to be true when you go live
+    "Agy_BlazorClient_Use_Live_JwtServer": "true", // Only Agy.Blazor reads this setting not Agy.JwtServer Server - as it will be live IP's on Ubu or local IP's on Live (Mpc/Mlap)..
+
+
+    // Jwt length in months (int)
+    "JwtMonths": 2
+
+  },
+
+
+  // Serilog   : Verbose  Debug  Information  Warning  Error  Fatal
+  // Microsoft : Trace    Debug  Information  Warning  Error  Critical
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.AspNetCore.Localization": "Error",
+      "Microsoft.Hosting.Lifetime": "Warning", // Has no effect - need to do it from program.cs
+      "Microsoft.AspNetCore.SignalR": "Trace", // Was Debug
+      "Microsoft.AspNetCore.Http.Connections": "Debug"
+    }
+  }
+}

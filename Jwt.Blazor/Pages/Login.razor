@@ -1,0 +1,155 @@
+﻿@page "/login"
+
+@using Jwt.Blazor
+@using Agy.Blazor.Classes
+@using System.Text.Json
+@using System.Text.Json.Serialization;
+@using System.Diagnostics
+
+@*@inject ILocalStorageService localStorage*@
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration config
+@inject IJSRuntime JSRuntime
+
+@inject MyAuthenticationStateProvider MyAuthStateProvider
+
+<h3>Login</h3>
+
+<div class="form-group row m-b-15">
+    <label class="col-md-3 col-form-label">Username</label>
+    <div class="col-md-7">
+        <input @bind-value="Username" type="text" class="form-control" placeholder=" Enter username" />
+    </div>
+</div>
+<div class="form-group row m-b-15">
+    <label class="col-md-3 col-form-label">Password</label>
+    <div class="col-md-7">
+        <input @bind-value="Password" type="text" class="form-control" placeholder="Enter password" />
+    </div>
+</div>
+<button type="button" @onclick="LoginUser" class="btn btn-sm btn-primary m-r-5">Login</button>
+
+
+@code {
+    string Username;
+    string Password;
+    string Message;
+
+    private async void LoginUser()
+    {
+        AuthenticateRequest unpw = new AuthenticateRequest { Username = this.Username, Password = this.Password };
+
+        var url = string.Empty;
+
+        var Live = Convert.ToBoolean(config.GetSection("AppSettings:Agy_BlazorClient_Use_Live_JwtServer").Value);
+
+        if (Live)
+        {
+            url = config.GetSection("AppSettings:Live_Jwt_IP").Value;
+        }
+        else
+        {
+            url = config.GetSection("AppSettings:Localhost_Jwt_IP").Value;
+        }
+        url = url + "/token/authenticate";
+
+        var jsonUser = JsonSerializer.Serialize(unpw);
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Content = new StringContent(jsonUser);
+        request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        var client = ClientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            //using var responseStream = await response.Content.ReadAsStreamAsync();
+            var responseStream = response.Content.ReadAsStringAsync().Result;
+
+
+            var Jwt = JsonSerializer.Deserialize<AuthenticateResponse>(responseStream);
+
+            Debug.WriteLine($"Jwt: {Utils.ShortenJWT(Jwt.token)}");
+
+            // Jwt
+            // Extract claims from Jwt for use in LoadClaims
+            var secret = config.GetSection("AppSettings:Secret").Value;
+            var claims = ValidateJwt(Jwt.token, secret);
+
+            // To auth or not to auth
+            MyAuthStateProvider.LoadUser(claims);
+
+            var AuthState = await MyAuthStateProvider.GetAuthenticationStateAsync();
+
+
+            //await localStorage.SetItemAsync("jwt", Jwt.token);
+            //CreateCookie("jwt", Jwt.token);
+        }
+        else
+        {
+            // Unauthorized
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                Debug.WriteLine("Unauthorized");
+
+            }
+        }
+
+        //shouldRender = true;
+    }
+
+    // HELPERS
+    @using Microsoft.IdentityModel.Tokens;
+    @using System.IdentityModel.Tokens.Jwt;
+    @using System.Security;
+    @using System.Security.Claims;
+    @using System.Text;
+
+    public IEnumerable<Claim> ValidateJwt(string token, string secret)
+    {
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            //var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(secret);
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+
+            var name = jwtToken.Claims.FirstOrDefault(o => o?.Type == "name")?.Value;
+
+            Debug.WriteLine("    Token  VALIDATED");
+            // Debug.WriteLine($"    Jwt data: name = {name}  :  user_type = {ut}");
+            Debug.WriteLine($"    Jwt data: name = {name}");
+
+            return jwtToken.Claims;
+        }
+        catch
+        {
+            // do nothing if jwt validation fails
+            // user is not attached to context so request won't have access to secure routes
+
+            Debug.WriteLine("    Token  NOT  VALID");
+            return null;
+        }
+    }
+
+
+    private async void CreateCookie(string name, string value)
+    {
+        var test = await JSRuntime.InvokeAsync<string>("methods.CreateCookie", name, value);// "methods.CreateCookie is implemented in _host.cshtml
+    }
+
+    private async void CreateCookie(string name, string value, int days)
+    {
+        var test = await JSRuntime.InvokeAsync<string>("methods.CreateCookie", name, value, days);
+    }
+}

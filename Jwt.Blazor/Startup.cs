@@ -16,6 +16,7 @@ namespace Jwt.Blazor
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,7 +30,11 @@ namespace Jwt.Blazor
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddHttpClient();
+
             services.AddSingleton<WeatherForecastService>();
+
+
 
             //// Custom Auth - needs casting whenever the service is used.
             //services.AddScoped<AuthenticationStateProvider, MyAuthenticationStateProvider>();
@@ -39,6 +44,22 @@ namespace Jwt.Blazor
 
             services.AddScoped<AuthenticationStateProvider>(
               p => p.GetService<MyAuthenticationStateProvider>());
+
+
+
+            // Authorization (what are you allowed to do)
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy(MyPolicies.HasSub, MyPolicies.HasSubPolicy());
+                opt.AddPolicy(MyPolicies.IsMultiUser, MyPolicies.IsMultiUserPolicy());
+                opt.AddPolicy(MyPolicies.IsWorker, MyPolicies.IsWorkerPolicy());
+                opt.AddPolicy(MyPolicies.IsAgent, MyPolicies.IsAgentPolicy());
+                opt.AddPolicy(MyPolicies.IsBooker, MyPolicies.IsBookerPolicy());
+            });
+
+            // My Sevices
+            services.AddSingleton(Configuration);
+
 
         }
 

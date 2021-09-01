@@ -1,0 +1,22 @@
+﻿@page "/agency"
+
+@using System.Diagnostics
+
+<h3>Agency</h3>
+
+
+@attribute [Authorize(Policy = MyPolicies.IsAgent)]
+@*@attribute [Authorize]*@
+
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        Debug.WriteLine("");
+        Debug.WriteLine($"Agency  OnInitializedAsync  fired...");
+
+        return base.OnInitializedAsync();
+    }
+
+}

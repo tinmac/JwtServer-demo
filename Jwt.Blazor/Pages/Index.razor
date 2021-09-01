@@ -1,6 +1,13 @@
 ﻿@page "/"
 
+@using System.Diagnostics
+
 @inject MyAuthenticationStateProvider MyAuth
+
+@*@attribute [Authorize(Policy = MyPolicies.IsAgent)]*@
+
+@*@attribute [Authorize]*@
+
 
 <h1>Hello, world!</h1>
 
@@ -11,12 +18,11 @@
 
     <NotAuthorized>
         <p>You are signed out.</p>
-        @*<li class="nav-item px-3">
-                <NavLink class="nav-link" href="login">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Login
-                </NavLink>
-            </li>*@
     </NotAuthorized>
+
+    <Authorizing>
+        <text>Please wait, we are authorizint the user.</text>
+    </Authorizing>
 </AuthorizeView>
 
 
@@ -24,13 +30,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Debug.WriteLine("");
+        Debug.WriteLine($"Index  OnInitializedAsync  fired...");
+
         //var myStateProv = AuthenticationStateProvider as MySAuthenticationStateProvider;
         //myStateProv.LoadUser("mperry", "testtest");
 
 
-        MyAuth.LoadUser("mperry", "testtest");
+        //MyAuth.LoadUser("mperry", "testtest");
 
-        var AuthState = await MyAuth.GetAuthenticationStateAsync();
+        //var AuthState = await MyAuth.GetAuthenticationStateAsync();
     }
 
 
