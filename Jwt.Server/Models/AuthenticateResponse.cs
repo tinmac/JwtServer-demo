@@ -5,14 +5,11 @@ namespace Jwt.Server.Models
 {
     public class AuthenticateResponse
     {
-        public string Id { get; set; }
-        public string Token { get; set; }
+        //public string id { get; set; }
+        //public string username { get; set; }
+        public string token { get; set; }
 
 
-        public AuthenticateResponse(ApplicationUser user, string token)
-        {
-            Id = user.Id;
-            Token = token;
-        }
+
     }
 }

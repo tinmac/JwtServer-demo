@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31521.260
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Server", "Jwt.Server\Jwt.Server.csproj", "{F79D5032-7D9C-4D12-A730-2E6A592880AD}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Client_Api", "Jwt.Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Client_SignalR", "Jwt.Client_SignalR\Jwt.Client_SignalR.csproj", "{BE9D5C35-008A-4332-A0B9-85F605B9C020}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt.Blazor", "Jwt.Blazor\Jwt.Blazor.csproj", "{FBCE16BC-D436-47E8-B0D9-E1BDF4DEF0A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jwt.Blazor", "Jwt.Blazor\Jwt.Blazor.csproj", "{C9E5F16F-2DD3-42FF-A92D-93F36BD268EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{BE9D5C35-008A-4332-A0B9-85F605B9C020}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE9D5C35-008A-4332-A0B9-85F605B9C020}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE9D5C35-008A-4332-A0B9-85F605B9C020}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBCE16BC-D436-47E8-B0D9-E1BDF4DEF0A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBCE16BC-D436-47E8-B0D9-E1BDF4DEF0A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBCE16BC-D436-47E8-B0D9-E1BDF4DEF0A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBCE16BC-D436-47E8-B0D9-E1BDF4DEF0A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9E5F16F-2DD3-42FF-A92D-93F36BD268EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E5F16F-2DD3-42FF-A92D-93F36BD268EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9E5F16F-2DD3-42FF-A92D-93F36BD268EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E5F16F-2DD3-42FF-A92D-93F36BD268EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

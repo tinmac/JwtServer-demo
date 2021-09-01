@@ -1,60 +1,37 @@
 ﻿@page "/"
 
-@using System.Diagnostics
+@inject MyAuthenticationStateProvider MyAuth
 
-@inject NavigationManager NavManager
-@inject AuthenticationStateProvider AuthProvider
+<h1>Hello, world!</h1>
 
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome @context.User.Identity.Name</p>
+    </Authorized>
 
-
-<h3>Home</h3>
-<p>@Msg</p>
+    <NotAuthorized>
+        <p>You are signed out.</p>
+        @*<li class="nav-item px-3">
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Login
+                </NavLink>
+            </li>*@
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
-    public string Msg { get; set; }
-    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
+        //var myStateProv = AuthenticationStateProvider as MySAuthenticationStateProvider;
+        //myStateProv.LoadUser("mperry", "testtest");
 
-        //var user = (await AuthStat).User;
 
-        //if (user.Identity.IsAuthenticated)
-        //{
-        //    var ctx = await AuthProvider.GetAuthenticationStateAsync();
-        //    var claims = ctx?.User?.Claims;
+        MyAuth.LoadUser("mperry", "testtest");
 
-        //    Msg = claims?.FirstOrDefault(o => o.Type.ToLower() == "name")?.Value;
-
-        //    var WorkerClaim = claims?.FirstOrDefault(o => o.Type.ToLower() == "worker");
-        //    var BookerClaim = claims?.FirstOrDefault(o => o.Type.ToLower() == "booker");
-
-        //    string UserType = string.Empty;
-        //    if (WorkerClaim != null && WorkerClaim.Value == "true")
-        //    {
-        //        UserType = "Worker";
-        //        Debug.WriteLine($"Index:  -->  OnInitializedAsync()  -->  UserType: {UserType}");
-        //        NavManager.NavigateTo("/worker");
-        //    }
-        //    if (BookerClaim != null && BookerClaim.Value == "true")
-        //    {
-        //        UserType = "Booker";
-        //        Debug.WriteLine($"Index:  -->  OnInitializedAsync()  -->  UserType: {UserType}");
-        //        NavManager.NavigateTo("/booker");
-        //    }
-
-            
-        //    // no one we know, nav to an error page & LOG IT - probably an attack!
-        //    NavManager.NavigateTo("/somethingwentwrong");
-        //}
-        //else
-        //{
-        //    Msg = "You are not Authenticated";
-        //}
-
+        var AuthState = await MyAuth.GetAuthenticationStateAsync();
     }
 
 
 }
-

@@ -45,16 +45,6 @@ namespace Jwt.Server.Controllers
         }
 
 
-        //// Jwt.Server also needs Auth - because the Users DB lives here in Jwt.Server, we need to provide an internal Api for user management (). This Auth is setup in Startup.cs
-        //
-        //[Authorize (UserType="worker")]
-        //[HttpGet("users")]
-        //public IEnumerable<ApplicationUser> Users()
-        //{
-        //    var users = _userManager.Users.ToList();
-        //    return users;
-        //}
-
 
 
         // HELPERS
@@ -76,27 +66,29 @@ namespace Jwt.Server.Controllers
             var claims = await _userManager.GetClaimsAsync(user);
             var token = GenerateJwtToken(user, claims);
 
-            return new AuthenticateResponse(user, token);
+            return new AuthenticateResponse { token = token };
         }
 
         private string GenerateJwtToken(ApplicationUser user, IList<Claim> claims)
         {
-            // generate token that is valid for 10 years (to keep the question working on StackOverflow for a while)
+            // generate token that is valid for 10 months 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
-            // Add the users claims to the Jwt
-            var clms = new ClaimsIdentity(new[] { new Claim("id", user.Id) });
+            var sbj = new ClaimsIdentity(new[] {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
+            });
+
             foreach (var claim in claims)
             {
-                clms.AddClaim(new Claim(claim.Type, claim.Value));
+                sbj.AddClaim(new Claim(claim.Type, claim.Value));
             }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = clms, // Assigning the claims to 'Subject' has same outcome as adding to 'Claims' - both do the same job (except subject cannot be empty). 
-                //Claims = clms, 
-                Expires = DateTime.UtcNow.AddYears(10),
+                Subject = sbj,
+                Expires = DateTime.UtcNow.AddMonths(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
